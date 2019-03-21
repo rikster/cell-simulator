@@ -88,10 +88,25 @@ class Simulator extends React.Component {
   };
 
   runIteration() {
-    console.log("running iteration");
-    let newBoard = this.makeEmptyGrid();
+    let newGrid = this.makeEmptyGrid();
 
-    this.board = newBoard;
+    for (let y = 0; y < this.rows; y++) {
+      for (let x = 0; x < this.cols; x++) {
+        let neighbors = this.calculateNeighbors(this.grid, x, y);
+        if (this.grid[y][x]) {
+          if (neighbors === 2 || neighbors === 3) {
+            newGrid[y][x] = true;
+          } else {
+            newGrid[y][x] = false;
+          }
+        } else {
+          if (!this.grid[y][x] && neighbors === 3) {
+            newGrid[y][x] = true;
+          }
+        }
+      }
+    }
+    this.grid = newGrid;
     this.setState({ cells: this.makeCells() });
 
     this.timeoutHandler = window.setTimeout(() => {
@@ -99,6 +114,41 @@ class Simulator extends React.Component {
     }, this.state.interval);
   }
 
+  calculateNeighbors(grid, x, y) {
+    let neighbors = 0;
+    const dirs = [
+      [-1, -1],
+      [-1, 0],
+      [-1, 1],
+      [0, 1],
+      [1, 1],
+      [1, 0],
+      [1, -1],
+      [0, -1]
+    ];
+    for (let i = 0; i < dirs.length; i++) {
+      const dir = dirs[i];
+      let y1 = y + dir[0];
+      let x1 = x + dir[1];
+
+      if (
+        x1 >= 0 &&
+        x1 < this.cols &&
+        y1 >= 0 &&
+        y1 < this.rows &&
+        grid[y1][x1]
+      ) {
+        neighbors++;
+      }
+    }
+
+    return neighbors;
+  }
+
+  handleClear = () => {
+    this.grid = this.makeEmptyGrid();
+    this.setState({ cells: this.makeCells() });
+  };
   render() {
     const { cells, isRunning } = this.state;
 
@@ -131,6 +181,9 @@ class Simulator extends React.Component {
               Run
             </button>
           )}
+          <button className="button" onClick={this.handleClear}>
+            Clear
+          </button>
         </div>
       </div>
     );
