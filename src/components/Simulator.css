@@ -1,0 +1,9 @@
+.grid {
+  position: relative;
+  margin: 0 auto;
+  padding: 1px;
+  border: 1px;
+  background-color: transparent;
+  background-image: linear-gradient(lightgrey 1px, transparent 1px),
+    linear-gradient(90deg, lightgrey 1px, transparent 1px);
+}
