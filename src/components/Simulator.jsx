@@ -17,7 +17,9 @@ class Simulator extends React.Component {
 
     // cell toggles in state force re-renders
     this.state = {
-      cells: []
+      cells: [],
+      interval: keys.interval,
+      isRunning: false
     };
   }
 
@@ -42,8 +44,8 @@ class Simulator extends React.Component {
       y: rect.top + window.pageYOffset - doc.clientTop
     };
   }
-	
-	// Create cells from this.grid
+
+  // Create cells from this.grid
   makeCells() {
     let cells = [];
     for (let y = 0; y < this.rows; y++) {
@@ -72,8 +74,16 @@ class Simulator extends React.Component {
     this.setState({ cells: this.makeCells() });
   };
 
+  runGame = () => {
+    this.setState({ isRunning: true });
+  };
+
+  stopGame = () => {
+    this.setState({ isRunning: false });
+  };
+
   render() {
-    const { cells } = this.state;
+    const { cells, isRunning } = this.state;
 
     return (
       <div>
@@ -92,6 +102,18 @@ class Simulator extends React.Component {
           {cells.map(cell => (
             <Cell x={cell.x} y={cell.y} key={`${cell.x},${cell.y}`} />
           ))}
+        </div>
+
+        <div className="controls">
+          {isRunning ? (
+            <button className="button" onClick={this.stopGame}>
+              Stop
+            </button>
+          ) : (
+            <button className="button" onClick={this.runGame}>
+              Run
+            </button>
+          )}
         </div>
       </div>
     );
