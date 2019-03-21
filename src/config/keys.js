@@ -1,5 +1,5 @@
 export default {
-	cellSize: 20,
+	cellSize: 10,
 	width: 800,
 	height: 600
 }
