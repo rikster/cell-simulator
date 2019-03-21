@@ -76,11 +76,28 @@ class Simulator extends React.Component {
 
   runGame = () => {
     this.setState({ isRunning: true });
+    this.runIteration();
   };
 
   stopGame = () => {
     this.setState({ isRunning: false });
+    if (this.timeoutHandler) {
+      window.clearTimeout(this.timeoutHandler);
+      this.timeoutHandler = null;
+    }
   };
+
+  runIteration() {
+    console.log("running iteration");
+    let newBoard = this.makeEmptyGrid();
+
+    this.board = newBoard;
+    this.setState({ cells: this.makeCells() });
+
+    this.timeoutHandler = window.setTimeout(() => {
+      this.runIteration();
+    }, this.state.interval);
+  }
 
   render() {
     const { cells, isRunning } = this.state;
